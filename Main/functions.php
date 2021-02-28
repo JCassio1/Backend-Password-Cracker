@@ -6,6 +6,7 @@ class Functions {
 
   Private $salt = "ThisIs-A-Salt123";
   Private $rawFile = "password-wordlist.txt";
+  Private $saltedHash;
 
   public function getSalt() {
     return $this->salt;
@@ -20,13 +21,18 @@ class Functions {
         echo $buffer;
       }
     }
-
     fclose($fileHandle);
+  }
+
+  public function encryptToMD5($password) {
+    $this->saltedHash = md5($password.$this->salt);
+    return $this->saltedHash;
   }
 
 }
 
 $callClass = new Functions ;
-$result = $callClass->ReadFile();
+$result = $callClass->encryptToMD5("Password");
+echo $result;
 
  ?>
