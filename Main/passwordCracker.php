@@ -2,38 +2,29 @@
 
 <?php
 
-require('functions.php');
+require("functions.php");
 
-try {
-  $readDB = Database::connectReadDatabase();
-} catch (\Exception $e) {
-  echo "Database connection failed";
-}
+$callFunction = new Functions();
 
-try {
-  $query = $readDB->prepare('SELECT * FROM not_so_smart_users');
-  $query->execute();
+$rawFile = "1MillionList.txt";
 
-  $rowCount = $query->rowCount();
+$wordToFind = "cg451686";
+$listOfWords = fopen($rawFile, "r") or die("Unable to open");
 
-  if ($rowCount === 0) {
-    echo "No rows found";
-  }
+$originalPassword;
 
-  else {
-    echo $rowCount;
-  }
+while(!feof($listOfWords)) {
+    $compare = fgets($listOfWords);
+    $compare = str_replace(array("\r", "\n"), '',$compare);
+    $isFound = strcmp($compare , $wordToFind);
 
-  $usersArray = array();
-
-  while($row = $query->fetch(PDO::FETCH_ASSOC)) {
-
-    $result = $row['user_id'];
-    echo $result;
-
-  }
-
-} catch (\Exception $e) {
-  echo "Error fetching data";
+    if($isFound == 0) {
+        echo ("Found it!\n");
+        $originalPassword = 0;
+        fclose($listOfWords);
+        break;
+    } else {
+        echo "Not found\n>";
+    }
 }
  ?>
