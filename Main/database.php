@@ -17,6 +17,16 @@ class Database
 
     return self::$readDatabaseConnection;
   }
+
+  public static function prepare($sql) {
+    return self::connectReadDatabase()->prepare($sql);
+  }
+
 }
 
-?>
+// try {
+//   $readDB = Database::connectReadDatabase();
+//   echo "Connected mate";
+// } catch (\Exception $e) {
+//   echo "Database connection failed";
+// }
