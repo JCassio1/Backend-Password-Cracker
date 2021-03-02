@@ -1,32 +1,33 @@
 <?php
-
+// Connecting to MySQL database
 /**
  *
  */
-class Database
-{
-  private static $readDatabaseConnection;
+ class Database
+ {
+   private $readDatabaseConnection;
+   private $serverName;
+   private $dbUsername;
+   private $dbPassword;
+   private $dbName;
+   private $charset;
 
-  public static function connectReadDatabase() {
+   public function connectReadDatabase() {
+     $this->serverName = "127.0.0.1";
+     $this->dbUsername = "root";
+     $this->dbPassword = "";
+     $this->dbName = "notSoSmartUsers";
+     $this->charset = "utf8";
 
-  if(self::$readDatabaseConnection === null)
+     try {
+       $connectionParams = "mysql:host=".$this->serverName.";dbname=".$this->dbName.";charset=".$this->charset;
+       $pdo = new PDO($connectionParams, $this->dbUsername, $this->dbPassword);
+       $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+       $pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
 
-    self::$readDatabaseConnection = new PDO('mysql:host=localhost;dbname=notSoSmartUsers;charset=utf8', 'root', '');
-    self::$readDatabaseConnection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    self::$readDatabaseConnection->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
-
-    return self::$readDatabaseConnection;
-  }
-
-  public static function prepare($sql) {
-    return self::connectReadDatabase()->prepare($sql);
-  }
-
-}
-
-// try {
-//   $readDB = Database::connectReadDatabase();
-//   echo "Connected mate";
-// } catch (\Exception $e) {
-//   echo "Database connection failed";
-// }
+       return $pdo;
+     } catch (PDOException $e) {
+       echo "Database connection unsuccessful".$e->getMessage();
+     }
+   }
+ }
