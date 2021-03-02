@@ -27,7 +27,7 @@ class Functions {
         $originalPassword = $compare;
         $hashedListWord = $this->encryptToMD5($originalPassword);
         $hashedWordToFind = $this->encryptToMD5($wordToFind);
-        try{$databaseCheck = $this->searchDatabase($hashedListWord, $this->callDatabase);}
+        try{$databaseCheck = $this->searchDatabase($hashedListWord);}
         catch(\Exception $e) {echo "Database check failed";}
         $compare = str_replace(array("\r", "\n"), '',$compare);
 
