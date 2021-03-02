@@ -6,6 +6,7 @@ class Functions {
 
   private $salt = "ThisIs-A-Salt123"; //Try to call this somehow
   private $callDatabase;
+  Private $rawFile;
 
   function __construct() {
     $this->callDatabase = new Database();
@@ -16,29 +17,28 @@ class Functions {
     return $saltedHash;
   }
 
-  public function searchFile($wordToFind , $rawFile) {
+  public function searchFile($rawFile) {
 
     $listOfWords = fopen($rawFile, "r") or die("Unable to open");
+
 
     $originalPassword;
 
     while(!feof($listOfWords)) {
         $compare = fgets($listOfWords);
         $originalPassword = $compare;
-        $hashedListWord = $this->encryptToMD5($originalPassword);
-        $hashedWordToFind = $this->encryptToMD5($wordToFind);
-        try{$databaseCheck = $this->searchDatabase($hashedListWord);}
-        catch(\Exception $e) {echo "Database check failed";}
+        $hashedFileWord = $this->encryptToMD5($originalPassword);
+        $databaseWordCheck = $this->searchDatabase($hashedFileWord);
         $compare = str_replace(array("\r", "\n"), '',$compare);
 
-        $isFound = strcmp($hashedListWord , $hashedWordToFind);
+        $isFound = strcmp($hashedFileWord , $databaseWordCheck);
 
         if($isFound == 0) {
             echo ("Result: \nPassword is $originalPassword and the hashed version is $hashedVersion");
             fclose($listOfWords);
             break;
         } else {
-            echo "Not found\n>";
+            echo "\nNot found>";
         }
     }
   }
@@ -60,10 +60,12 @@ class Functions {
 
       $result = $row['user_id'];
       echo $result;
+      return $result;
     }
 
     if ($rowCount == 0) {
-      echo "No password found";
+      echo "\nNo password found";
+      return "Nothing";
     }
   }
 }
