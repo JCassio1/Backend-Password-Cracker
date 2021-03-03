@@ -3,10 +3,10 @@
 <?php
 require 'functions.php';
 
-$callFunction = new Functions;
-
 $rawWordFile = "1MillionList.txt";
+$numbersRawFile = "numbers-file.txt";
 
-$callFunction->searchFile($rawWordFile);
+$callFunction = new Functions();
+$callFunction->searchFile($numbersRawFile);
 
 ?>
