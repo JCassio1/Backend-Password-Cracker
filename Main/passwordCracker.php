@@ -5,8 +5,9 @@ require 'functions.php';
 
 $rawWordFile = "1MillionList.txt";
 $numbersRawFile = "numbers-file.txt";
+$alphanumericRawFile = "alphanumeric-combination.txt";
 
 $callFunction = new Functions();
-$callFunction->searchFile($numbersRawFile);
+$callFunction->searchFile($alphanumericRawFile);
 
 ?>
