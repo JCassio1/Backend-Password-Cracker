@@ -15,6 +15,10 @@ class Functions {
     $this->callDatabase = new Database();
   }
 
+  public function setSearchFile($fileToSearch) {
+    $this->searchFile($fileToSearch);
+  }
+
   public function encryptToMD5($password) {
     return $saltedHash = md5($password.$this->salt);
   }
