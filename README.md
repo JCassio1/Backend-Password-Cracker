@@ -2,9 +2,9 @@
 
 This is a test you a password cracker tool. There are 22 passwords to find, 12 are dictionary words, 4 are numbers, 4 are 3 lowercase characters strings with a number at the end, and Two are 6 character length string made up of Upper, Lowercase and Numbers.
 
-<video width="320" height="200" controls preload> 
-    <source src="https://github.com/JCassio1/Backend-Password-Cracker/blob/main/Assets/Video.mp4"></source> 
-</video>
+<p align="center">
+  <img src="https://github.com/JCassio1/Backend-Password-Cracker/blob/main/Assets/Video.gif" />
+</p>
 
 ## 🚀 Tech
 
