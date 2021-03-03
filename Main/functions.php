@@ -4,7 +4,7 @@ require 'database.php';
 
 class Functions {
 
-  private $salt = "ThisIs-A-Salt123"; //Try to call this somehow
+  private $salt = "ThisIs-A-Salt123";
   private $callDatabase;
   Private $rawFile;
 
@@ -13,59 +13,55 @@ class Functions {
   }
 
   public function encryptToMD5($password) {
-    $saltedHash = md5($password.$this->salt);
-    return $saltedHash;
+    return $saltedHash = md5($password.$this->salt);
   }
 
   public function searchFile($rawFile) {
+    //This func will pick words from file line by line, hash & Salt and search in database func
 
     $listOfWords = fopen($rawFile, "r") or die("Unable to open");
-
-
     $originalPassword;
+    $foundCounter = 0;
+
+    //// TODO: Add an array with original password and hashed password
 
     while(!feof($listOfWords)) {
-        $compare = fgets($listOfWords);
+        $compare = trim(fgets($listOfWords));
         $originalPassword = $compare;
         $hashedFileWord = $this->encryptToMD5($originalPassword);
         $databaseWordCheck = $this->searchDatabase($hashedFileWord);
         $compare = str_replace(array("\r", "\n"), '',$compare);
 
-        $isFound = strcmp($hashedFileWord , $databaseWordCheck);
+        $isFound = strcmp($hashedFileWord , $databaseWordCheck); //remove string space
 
         if($isFound == 0) {
-            echo ("Result: \nPassword is $originalPassword and the hashed version is $hashedVersion");
-            fclose($listOfWords);
-            break;
-        } else {
-            echo "\nNot found>";
+            $foundCounter = $foundCounter + 1;
+            echo ("\nResult: Password is $originalPassword and the hashed version is $hashedFileWord\n");
+            echo "\n\n!!!---- $foundCounter Matches found ----!!!\n";
         }
     }
+    fclose($listOfWords);
+    echo "\n\n!!!---End of search---!!!";
   }
 
   public function searchDatabase($searchPassword) {
-    //This func will search for string on password column of database
+    //This func will search for salted hash string on password column of database
 
-    $sql = 'SELECT user_id FROM not_so_smart_users WHERE password = :searchPassword';
+    echo "\n searching for:  $searchPassword    in database";
+
+    $sql = 'SELECT password FROM not_so_smart_users WHERE password = :searchPassword';
 
     $accessDatabase = $this->callDatabase->connectReadDatabase()->prepare($sql);
     $accessDatabase->bindParam(':searchPassword', $searchPassword, PDO::PARAM_STR);
     $accessDatabase->execute();
 
     $rowCount = $accessDatabase->rowCount();
+    $dbResult = $accessDatabase->fetch(PDO::FETCH_ASSOC);
 
-    $usersArray = array();
+    $foundCounter = 0;
 
-    while($row = $accessDatabase->fetch(PDO::FETCH_ASSOC)) {
-
-      $result = $row['user_id'];
-      echo $result;
-      return $result;
-    }
-
-    if ($rowCount == 0) {
-      echo "\nNo password found";
-      return "Nothing";
+    if ($dbResult) {
+      return $dbResult;
     }
   }
 }
