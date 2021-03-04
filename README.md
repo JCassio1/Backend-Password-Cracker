@@ -40,12 +40,13 @@ This is a test you a password cracker tool. There are 22 passwords to find, 12 a
 Solutions | Pros | Cons
 | :--- | ---: | :---:
 Search with regular expressins  | Extremely powerful search pattern | Passwords are not in plain text
-Search with MYSQL  | Compares cracked passwords faster with search engine | DBMS can ocasionally time-out 
+Search with MYSQL  | Compares cracked passwords faster with search engine | DBMS can ocasionally time-out
+Chunkify word and perform multiple SELECT on database  | Search is quicker than one at a time | Uses more resources and only worked with small files
 
 
-## 🛣 Solution
+## 🛣 Choosen solution
 
-Searching directly with DBMS. To search for matching MD5 salted passwords in the database, word/numeric/alphanumeric values were created and appended to text files that are then used to compare.
+Searching directly with DBMS one word at a time. It is a more time consuming approach, however, it works with large file and returns the number of matches at the end of the search. To search for matching MD5 salted passwords in the database, word/numeric/alphanumeric values were created and appended to text files that are then used to compare.
 
 It operates in the following way:
 
@@ -56,6 +57,10 @@ It operates in the following way:
 - Upon encryption. It is searched in the database via a query
 - If there is a match, it is echoed on the screen and saved into an array
 - Upon reaching the end of the file. It prints every match that was saved in the array
+
+<p align="center">
+  <img src="https://github.com/JCassio1/Backend-Password-Cracker/blob/main/Assets/flow-diagram.png" />
+</p>
 
 
 Made with ❤️ by Joselson
