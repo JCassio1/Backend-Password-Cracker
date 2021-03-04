@@ -23,8 +23,8 @@ class Functions {
     return $saltedHash = md5($password.$this->salt);
   }
 
+  //Appends or prints passwords cracked from text files saved on foundArray
   public function manipulateArray($value, $action) {
-    //This func will append or display values in array
     switch ($action) {
         case "append":
             array_push($this->foundArray, $value);
@@ -41,7 +41,7 @@ class Functions {
   }
 
   public function searchFile($rawFile) {
-    //This func will pick words from file line by line, hash & Salt and search in database func
+    //This func will pick words from file line by line and search in func database
 
     $listOfWords = fopen($rawFile, "r") or die("Unable to open");
     $originalPassword;
@@ -69,7 +69,7 @@ class Functions {
   }
 
   public function searchDatabase($searchPassword, $notHashedPassword) {
-    //This func will search for salted hash string on password column of database
+    //This func will search for salted hash strings on password column of database
 
     echo "\n searching for: $notHashedPassword | $searchPassword    in database";
 
