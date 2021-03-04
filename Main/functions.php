@@ -43,32 +43,33 @@ class Functions {
   public function searchFile($rawFile) {
     //This func will pick words from file line by line and search in func database
 
-    $listOfWords = fopen($rawFile, "r") or die("Unable to open");
+    $contentFile = fopen($rawFile, "r") or die("Unable to open");
     $originalPassword;
 
-    while(!feof($listOfWords)) {
-        $compare = trim(fgets($listOfWords));
-        $originalPassword = $compare;
-        $hashedFileWord = $this->encryptToMD5($originalPassword);
-        $databaseWordCheck = $this->searchDatabase($hashedFileWord, $originalPassword);
-        $compare = str_replace(array("\r", "\n"), '',$compare);
+    while(!feof($contentFile)) {
+        $word = trim(fgets($contentFile)); //removes space that can affect MD5 hashing
+        $originalPassword = $word;
+        $hashedWord = $this->encryptToMD5($originalPassword);
+        $userInformation = $this->findOnDatabase($hashedWord, $originalPassword);
+        $word = str_replace(array("\r", "\n"), '',$word);
 
-        $isFound = strcmp($hashedFileWord , $databaseWordCheck[1]); //remove string space
+        //compares hashed word with database password
+        $isFound = strcmp($hashedWord , $userInformation[1]);
 
         if($isFound == 0) {
             $this->foundCounter ++;
-            $this->manipulateArray("User ID: $databaseWordCheck[0] | Password: $originalPassword | Hashed version is $hashedFileWord", "append");
+            $this->manipulateArray("User ID: $userInformation[0] | Password: $originalPassword | Hashed version is $hashedWord", "append");
             echo "\n\n!!!---- $this->foundCounter Matches found ----!!!\n";
-            echo ("\nUser ID: $databaseWordCheck[0] | Password: $originalPassword | Hashed version is $hashedFileWord\n");
+            echo ("\nUser ID: $userInformation[0] | Password: $originalPassword | Hashed version is $hashedWord\n");
         }
     }
-    fclose($listOfWords);
+    fclose($contentFile);
     echo "\n\n!!!---End of search---!!!";
     echo "\n\nSearch results: \n\n";
     echo $this->manipulateArray(null,"print");
   }
 
-  public function searchDatabase($searchPassword, $notHashedPassword) {
+  public function findOnDatabase($searchPassword, $notHashedPassword) {
     //This func will search for salted hash strings on password column of database
 
     echo "\n searching for: $notHashedPassword | $searchPassword    in database";
@@ -87,6 +88,7 @@ class Functions {
       $userID = $dbResult['user_id'];
       $userPassword = $dbResult['password'];
 
+      //returns user id and password if match is found
       return array($userID, $userPassword);
     }
   }
